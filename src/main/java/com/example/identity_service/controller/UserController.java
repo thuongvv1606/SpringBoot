@@ -1,17 +1,20 @@
 package com.example.identity_service.controller;
 
-import com.example.identity_service.dto.response.ApiResponse;
-import com.example.identity_service.dto.request.UserCreationRequest;
-import com.example.identity_service.dto.request.UserUpdateRequest;
-import com.example.identity_service.dto.response.UserResponse;
-import com.example.identity_service.service.UserService;
+import java.util.List;
+
 import jakarta.validation.Valid;
-import lombok.extern.slf4j.Slf4j;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
+import com.example.identity_service.dto.request.UserCreationRequest;
+import com.example.identity_service.dto.request.UserUpdateRequest;
+import com.example.identity_service.dto.response.ApiResponse;
+import com.example.identity_service.dto.response.UserResponse;
+import com.example.identity_service.service.UserService;
+
+import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @RestController
@@ -28,12 +31,13 @@ public class UserController {
                 .build();
     }
 
-
     @GetMapping
     ApiResponse<List<UserResponse>> getAllUsers() {
         var authentication = SecurityContextHolder.getContext().getAuthentication();
         log.info("Username: {}", authentication.getName());
-        authentication.getAuthorities().forEach(grantedAuthority -> log.info("GrantedAuthority: {}", grantedAuthority.getAuthority()));
+        authentication
+                .getAuthorities()
+                .forEach(grantedAuthority -> log.info("GrantedAuthority: {}", grantedAuthority.getAuthority()));
         return ApiResponse.<List<UserResponse>>builder()
                 .data(userService.getAllUsers())
                 .build();
@@ -45,8 +49,9 @@ public class UserController {
     }
 
     @GetMapping("/myInfo")
-    UserResponse getMyInfo() {
-        return userService.getMyInfo();
+    ApiResponse<UserResponse> getMyInfo() {
+
+        return ApiResponse.<UserResponse>builder().data(userService.getMyInfo()).build();
     }
 
     @PutMapping("/{userId}")

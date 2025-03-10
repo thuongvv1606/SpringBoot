@@ -2,16 +2,14 @@ package com.example.identity_service.enums;
 
 public enum Role {
     ADMIN,
-    STAFF,  //updatePost, approvePost
+    STAFF, // updatePost, approvePost
     USER
 }
 
-//Permission (Privilege){
+// Permission (Privilege){
 //    - createPost
 //    - updatePost
-//}
+// }
 
-//User -> many Role
+// User -> many Role
 //        Role -> many Permisson
-
-

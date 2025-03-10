@@ -1,9 +1,9 @@
 package com.example.identity_service.exception;
 
-import lombok.Data;
-import lombok.Getter;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
+
+import lombok.Getter;
 
 @Getter
 public enum ErrorCode {
@@ -20,13 +20,12 @@ public enum ErrorCode {
 
     private int code;
     private String message;
-    private HttpStatusCode statusCode;;
+    private HttpStatusCode statusCode;
+    ;
 
     ErrorCode(int code, String message, HttpStatusCode statusCode) {
         this.code = code;
         this.message = message;
         this.statusCode = statusCode;
     }
-
-
 }

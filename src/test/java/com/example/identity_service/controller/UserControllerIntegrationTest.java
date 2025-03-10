@@ -1,33 +1,30 @@
 package com.example.identity_service.controller;
 
-import com.example.identity_service.dto.request.UserCreationRequest;
-import com.example.identity_service.dto.response.UserResponse;
-import com.example.identity_service.service.UserService;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-import lombok.extern.slf4j.Slf4j;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
+import java.time.LocalDate;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.ArgumentMatchers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
-import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.testcontainers.containers.MySQLContainer;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
 
-import java.time.LocalDate;
+import com.example.identity_service.dto.request.UserCreationRequest;
+import com.example.identity_service.dto.response.UserResponse;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 
-import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @SpringBootTest
@@ -44,19 +41,19 @@ public class UserControllerIntegrationTest {
         registry.add("spring.datasource.password", MYSQL_CONTAINER::getPassword);
         registry.add("spring.datasource.driverClassName", () -> "com.mysql.cj.jdbc.Driver");
         registry.add("spring.jpa.hibernate.ddl-auto", () -> "update");
-
     }
 
     @Autowired
     private MockMvc mockMvc;
+
     private UserCreationRequest userCreationRequest;
     private UserResponse userResponse;
     private LocalDate dob;
 
     @BeforeEach
-    void initData(){
+    void initData() {
         dob = LocalDate.of(2002, 01, 01);
-        userCreationRequest =  UserCreationRequest.builder()
+        userCreationRequest = UserCreationRequest.builder()
                 .username("thuong")
                 .firstName("thuong")
                 .lastName("vu")
@@ -65,7 +62,7 @@ public class UserControllerIntegrationTest {
                 .build();
 
         userResponse = UserResponse.builder()
-                //.id("775cda1e-0361-4dd7-a44c-4675bb3ec6bc")
+                // .id("775cda1e-0361-4dd7-a44c-4675bb3ec6bc")
                 .username("thuong")
                 .firstName("thuong")
                 .lastName("vu")
@@ -76,21 +73,17 @@ public class UserControllerIntegrationTest {
     @Test
     // Test create user valid request success
     public void createUser_validRequest_success() throws Exception {
-        //GIVEN
+        // GIVEN
         ObjectMapper objectMapper = new ObjectMapper();
         objectMapper.registerModule(new JavaTimeModule());
         String content = objectMapper.writeValueAsString(userCreationRequest);
 
-        //when, then
-        mockMvc.perform(
-                MockMvcRequestBuilders
-                .post("/users")
-                .contentType(MediaType.APPLICATION_JSON)
-                .content(content)
-                )
+        // when, then
+        mockMvc.perform(MockMvcRequestBuilders.post("/users")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(content))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("code").value("1000"))
-                .andExpect(jsonPath("data.username").value("thuong"))
-        ;
+                .andExpect(jsonPath("data.username").value("thuong"));
     }
 }

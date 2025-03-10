@@ -1,12 +1,10 @@
 package com.example.identity_service.dto.response;
 
-import com.example.identity_service.entity.Role;
-import jakarta.persistence.Entity;
-import lombok.*;
-import lombok.experimental.FieldDefaults;
-
 import java.time.LocalDate;
 import java.util.Set;
+
+import lombok.*;
+import lombok.experimental.FieldDefaults;
 
 @Data
 @Builder
@@ -14,11 +12,11 @@ import java.util.Set;
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class UserResponse {
-     String id;
-     String username;
-     //String password;
-     String firstName;
-     String lastName;
-     LocalDate dob;
-     Set<RoleResponse> roles;
+    String id;
+    String username;
+    // String password;
+    String firstName;
+    String lastName;
+    LocalDate dob;
+    Set<RoleResponse> roles;
 }
